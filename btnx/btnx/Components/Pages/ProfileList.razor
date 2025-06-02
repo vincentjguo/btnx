@@ -1,0 +1,81 @@
+﻿@page "/"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@using btnx.Components.Models
+
+<h3>Profile List</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<button class="btn btn-success mb-3" @onclick="CreateProfile" type="button">Create New Profile</button>
+
+@if (profiles == null && string.IsNullOrEmpty(errorMessage))
+{
+    <p>Loading...</p>
+}
+else if (profiles != null && !profiles.Any())
+{
+    <p>No profiles found.</p>
+}
+else if (profiles != null)
+{
+    <table class="table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var profile in profiles)
+        {
+            <tr>
+                <td>@profile.Id</td>
+                <td>@profile.FirstName</td>
+                <td>@profile.LastName</td>
+                <td>@profile.Email</td>
+                <td>@profile.Phone</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => EditProfile(profile.Id)">Edit</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<ProfileDto>? profiles;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorMessage = null;
+        try
+        {
+            profiles = await Http.GetFromJsonAsync<List<ProfileDto>>("api/profiles");
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"API not reachable: {ex.Message}";
+        }
+    }
+
+    void EditProfile(int id)
+    {
+        Navigation.NavigateTo($"/profiles/edit/{id}");
+    }
+
+    void CreateProfile()
+    {
+        Navigation.NavigateTo("/profiles/create");
+    }
+}

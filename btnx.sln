@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "btnx", "btnx\btnx\btnx.csproj", "{82E597D2-178B-4D07-AD6D-2322719A422F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "btnx.Client", "btnx\btnx.Client\btnx.Client.csproj", "{802E6498-2DDA-4430-9534-B24E72EA1679}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82E597D2-178B-4D07-AD6D-2322719A422F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{82E597D2-178B-4D07-AD6D-2322719A422F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{82E597D2-178B-4D07-AD6D-2322719A422F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{82E597D2-178B-4D07-AD6D-2322719A422F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{802E6498-2DDA-4430-9534-B24E72EA1679}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{802E6498-2DDA-4430-9534-B24E72EA1679}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{802E6498-2DDA-4430-9534-B24E72EA1679}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{802E6498-2DDA-4430-9534-B24E72EA1679}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

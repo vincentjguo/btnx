@@ -1,0 +1,79 @@
+﻿@page "/profiles/create"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@using btnx.Components.Models
+
+<h3>Create New Profile</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm Model="profile" OnValidSubmit="HandleValidSubmit" FormName="CreateProfileForm">
+    <DataAnnotationsValidator />
+
+    <div class="mb-3">
+        <label>ID</label>
+        <InputNumber class="form-control" @bind-Value="profile.Id" disabled />
+    </div>
+    <div class="mb-3">
+        <label>First Name</label>
+        <InputText class="form-control" @bind-Value="profile.FirstName" />
+    </div>
+    <div class="mb-3">
+        <label>Last Name</label>
+        <InputText class="form-control" @bind-Value="profile.LastName" />
+    </div>
+    <div class="mb-3">
+        <label>Email</label>
+        <InputText class="form-control" @bind-Value="profile.Email" />
+    </div>
+    <div class="mb-3">
+        <label>Phone</label>
+        <InputText class="form-control" @bind-Value="profile.Phone" />
+    </div>
+    <div class="d-flex gap-2 mt-3">
+        <button type="submit" class="btn btn-success">Submit</button>
+        <button type="button" class="btn btn-secondary" @onclick="GoBack">Cancel</button>
+    </div>
+    <ValidationSummary />
+</EditForm>
+
+@code {
+    private ProfileDto profile = new();
+    private string? errorMessage;
+
+    protected override void OnInitialized()
+    {
+        var rng = new Random();
+        profile.Id = rng.Next(10000000, 100000000);
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        errorMessage = null;
+        try
+        {
+            var response = await Http.PostAsJsonAsync("api/profiles", profile);
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = $"Error: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"API not reachable: {ex.Message}";
+        }
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

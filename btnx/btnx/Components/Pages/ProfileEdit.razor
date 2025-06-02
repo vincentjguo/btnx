@@ -1,0 +1,98 @@
+﻿@page "/profiles/edit/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@using btnx.Components.Models
+
+<h3>Edit Profile</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+@if (profile == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="profile" OnValidSubmit="HandleValidSubmit" FormName="EditProfileForm">
+        <DataAnnotationsValidator />
+
+        <div class="mb-3">
+            <label>ID</label>
+            <InputNumber class="form-control" @bind-Value="profile.Id" disabled />
+        </div>
+        <div class="mb-3">
+            <label>First Name</label>
+            <InputText class="form-control" @bind-Value="profile.FirstName" />
+        </div>
+        <div class="mb-3">
+            <label>Last Name</label>
+            <InputText class="form-control" @bind-Value="profile.LastName" />
+        </div>
+        <div class="mb-3">
+            <label>Email</label>
+            <InputText class="form-control" @bind-Value="profile.Email" />
+        </div>
+        <div class="mb-3">
+            <label>Phone</label>
+            <InputText class="form-control" @bind-Value="profile.Phone" />
+        </div>
+        <div class="d-flex gap-2 mt-3">
+            <button type="submit" class="btn btn-success">Submit</button>
+            <button type="button" class="btn btn-secondary" @onclick="GoBack">Cancel</button>
+        </div>
+        <ValidationSummary />
+    </EditForm>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private ProfileDto? profile;
+    private string? errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        errorMessage = null;
+        try
+        {
+            profile = await Http.GetFromJsonAsync<ProfileDto>($"api/profiles/{Id}");
+            if (profile == null)
+            {
+                errorMessage = "Profile not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"API not reachable: {ex.Message}";
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        errorMessage = null;
+        try
+        {
+            var response = await Http.PutAsJsonAsync($"api/profiles/{Id}", profile);
+            if (response.IsSuccessStatusCode)
+            {
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                errorMessage = $"Error: {response.StatusCode}";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"API not reachable: {ex.Message}";
+        }
+    }
+    
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/");
+    }
+}
